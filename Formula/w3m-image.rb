@@ -53,6 +53,6 @@ class W3mImage < Formula
   test do
     assert_match "DuckDuckGo", shell_output("#{bin}/w3m -dump https://duckduckgo.com")
     # Basic check for the image helper program installation
-    assert_predicate libexec/"w3m/w3mimgdisplay", :exist?
+    assert_path_exists libexec/"w3m/w3mimgdisplay"
   end
 end

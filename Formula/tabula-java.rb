@@ -7,8 +7,8 @@ class TabulaJava < Formula
   head "https://github.com/tabulapdf/tabula-java.git", branch: "master"
 
   # Dependencies remain the same
-  depends_on "openjdk"
   depends_on "maven" => :build
+  depends_on "openjdk"
 
   def install
     # --- Patching Step ---
