@@ -17,7 +17,7 @@ class OpendataloaderPdf < Formula
 
     (bin/"opendataloader-pdf").write <<~EOS
       #!/bin/bash
-      exec "#{Formula["openjdk"].opt_bin}/java" -jar "#{libexec}/opendataloader-pdf-cli.jar" "$@"
+      exec "#{Formula["openjdk"].opt_bin}/java" -Djava.awt.headless=true -jar "#{libexec}/opendataloader-pdf-cli.jar" "$@"
     EOS
   end
 
