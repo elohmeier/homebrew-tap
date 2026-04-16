@@ -1,0 +1,47 @@
+name: Update Checksums
+
+on:
+  pull_request:
+    branches: [main]
+    paths: ["Formula/*.rb"]
+
+jobs:
+  update-checksums:
+    if: startsWith(github.head_ref, 'renovate/')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Update sha256 checksums
+        run: |
+          for formula in Formula/*.rb; do
+            if ! git diff --name-only origin/main...HEAD | grep -qF "$formula"; then
+              continue
+            fi
+
+            echo "Processing $formula..."
+
+            while IFS=: read -r line_no _; do
+              url=$(sed -n "${line_no}p" "$formula" | sed 's/.*url "\([^"]*\)".*/\1/')
+
+              sha_line_no=$(awk "NR > $line_no && /sha256 \"[a-f0-9]/ {print NR; exit}" "$formula")
+              [ -z "$sha_line_no" ] && continue
+
+              echo "  Fetching: $url"
+              new_sha=$(curl -fsSL "$url" | sha256sum | awk '{print $1}')
+              echo "  SHA256: $new_sha"
+
+              sed -i "${sha_line_no}s/sha256 \"[a-f0-9]\{64\}\"/sha256 \"${new_sha}\"/" "$formula"
+            done < <(grep -n 'url "' "$formula")
+          done
+
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v7
+        with:
+          commit_message: "fix: update sha256 checksums"
+          file_pattern: "Formula/*.rb"
