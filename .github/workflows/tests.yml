@@ -39,14 +39,19 @@ jobs:
 
       - name: Set up Homebrew
         id: set-up-homebrew
-        uses: Homebrew/actions/setup-homebrew@master
+        uses: Homebrew/actions/setup-homebrew@main
 
-      - name: Checkout PR branch
+      - name: Checkout PR branch and detect changed formulae
         if: github.event_name == 'workflow_run'
+        id: pr-checkout
         working-directory: ${{ steps.set-up-homebrew.outputs.repository-path }}
         run: |
-          git fetch origin "${{ github.event.workflow_run.head_branch }}"
+          git fetch origin main "${{ github.event.workflow_run.head_branch }}"
           git checkout FETCH_HEAD
+          CHANGED=$(git diff --name-only origin/main...HEAD -- Formula/ \
+            | sed -n 's|^Formula/\(.*\)\.rb$|elohmeier/tap/\1|p' \
+            | paste -sd ',' -)
+          echo "testing_formulae=$CHANGED" >> "$GITHUB_OUTPUT"
 
       - name: Cache Homebrew Bundler RubyGems
         uses: actions/cache@v5
@@ -62,7 +67,10 @@ jobs:
       - run: brew test-bot --only-tap-syntax
 
       - run: brew test-bot --only-formulae
-        if: github.event_name == 'pull_request' || github.event_name == 'workflow_run'
+        if: github.event_name == 'pull_request'
+
+      - run: brew test-bot --only-formulae --testing-formulae="${{ steps.pr-checkout.outputs.testing_formulae }}"
+        if: github.event_name == 'workflow_run' && steps.pr-checkout.outputs.testing_formulae
 
       - name: Upload bottles as artifact
         if: always() && (github.event_name == 'pull_request' || github.event_name == 'workflow_run')
