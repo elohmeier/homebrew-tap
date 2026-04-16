@@ -5,17 +5,48 @@ on:
     branches:
       - main
   pull_request:
+  workflow_run:
+    workflows: ["Update Checksums"]
+    types: [completed]
 
 jobs:
   test-bot:
+    if: >-
+      github.event_name != 'workflow_run' ||
+      (github.event.workflow_run.conclusion == 'success' &&
+       github.event.workflow_run.event == 'pull_request')
     strategy:
       matrix:
         os: [ubuntu-24.04, macos-15]
     runs-on: ${{ matrix.os }}
+    permissions:
+      contents: read
+      checks: write
     steps:
+      - name: Get PR info
+        if: github.event_name == 'workflow_run'
+        id: pr-info
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          PR_NUMBER=$(gh pr list --repo "${{ github.repository }}" \
+            --head "${{ github.event.workflow_run.head_branch }}" \
+            --json number --jq '.[0].number')
+          PR_SHA=$(gh pr view "$PR_NUMBER" --repo "${{ github.repository }}" \
+            --json headRefOid --jq .headRefOid)
+          echo "pr_number=$PR_NUMBER" >> "$GITHUB_OUTPUT"
+          echo "pr_sha=$PR_SHA" >> "$GITHUB_OUTPUT"
+
       - name: Set up Homebrew
         id: set-up-homebrew
         uses: Homebrew/actions/setup-homebrew@master
+
+      - name: Checkout PR branch
+        if: github.event_name == 'workflow_run'
+        working-directory: ${{ steps.set-up-homebrew.outputs.repository-path }}
+        run: |
+          git fetch origin "${{ github.event.workflow_run.head_branch }}"
+          git checkout FETCH_HEAD
 
       - name: Cache Homebrew Bundler RubyGems
         uses: actions/cache@v5
@@ -31,11 +62,25 @@ jobs:
       - run: brew test-bot --only-tap-syntax
 
       - run: brew test-bot --only-formulae
-        if: github.event_name == 'pull_request'
+        if: github.event_name == 'pull_request' || github.event_name == 'workflow_run'
 
       - name: Upload bottles as artifact
-        if: always() && github.event_name == 'pull_request'
+        if: always() && (github.event_name == 'pull_request' || github.event_name == 'workflow_run')
         uses: actions/upload-artifact@v7
         with:
           name: bottles_${{ matrix.os }}
           path: '*.bottle.*'
+
+      - name: Report check on PR HEAD
+        if: always() && github.event_name == 'workflow_run' && steps.pr-info.outputs.pr_sha
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh api "repos/${{ github.repository }}/check-runs" \
+            --method POST \
+            --field "name=test-bot (${{ matrix.os }})" \
+            --field "head_sha=${{ steps.pr-info.outputs.pr_sha }}" \
+            --field "status=completed" \
+            --field "conclusion=${{ job.status }}" \
+            --field "output[title]=brew test-bot (${{ matrix.os }})" \
+            --field "output[summary]=Re-run after checksum update"
