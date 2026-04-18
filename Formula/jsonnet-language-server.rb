@@ -1,7 +1,7 @@
 class JsonnetLanguageServer < Formula
   desc "Language Server Protocol implementation for Jsonnet"
   homepage "https://github.com/grafana/jsonnet-language-server"
-  url "https://github.com/grafana/jsonnet-language-server/archive/refs/tags/v0.15.0.tar.gz"
+  url "https://github.com/grafana/jsonnet-language-server/archive/refs/tags/v0.17.0.tar.gz"
   sha256 "085085ad1c8c75cb178876726b5a974027058cab9a83dff6435aa5681f687517"
   license "AGPL-3.0-only"
   head "https://github.com/grafana/jsonnet-language-server.git", branch: "main"
