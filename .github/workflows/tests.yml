@@ -81,14 +81,18 @@ jobs:
 
       - name: Report check on PR HEAD
         if: always() && github.event_name == 'workflow_run' && steps.pr-info.outputs.pr_sha
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh api "repos/${{ github.repository }}/check-runs" \
-            --method POST \
-            --field "name=test-bot (${{ matrix.os }})" \
-            --field "head_sha=${{ steps.pr-info.outputs.pr_sha }}" \
-            --field "status=completed" \
-            --field "conclusion=${{ job.status }}" \
-            --field "output[title]=brew test-bot (${{ matrix.os }})" \
-            --field "output[summary]=Re-run after checksum update"
+          curl -fsSL -X POST \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${{ github.repository }}/check-runs" \
+            -d '{
+              "name": "test-bot (${{ matrix.os }})",
+              "head_sha": "${{ steps.pr-info.outputs.pr_sha }}",
+              "status": "completed",
+              "conclusion": "${{ job.status }}",
+              "output": {
+                "title": "brew test-bot (${{ matrix.os }})",
+                "summary": "Re-run after checksum update"
+              }
+            }'
