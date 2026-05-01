@@ -1,4 +1,4 @@
-class ResticMacosBackup < Formula
+class ResticMacos < Formula
   desc "Restic build with macOS backup integration support"
   homepage "https://restic.net/"
   url "https://github.com/elohmeier/restic/archive/refs/tags/v0.18.1-macos.1.tar.gz"
@@ -9,8 +9,8 @@ class ResticMacosBackup < Formula
   depends_on "go" => :build
 
   def install
-    system "go", "run", "build.go", "--output", "restic-macos-backup"
-    bin.install "restic-macos-backup"
+    system "go", "run", "build.go", "--output", "restic-macos"
+    bin.install "restic-macos"
   end
 
   test do
@@ -20,9 +20,9 @@ class ResticMacosBackup < Formula
 
     (testpath/"testfile").write("This is a testfile")
 
-    system bin/"restic-macos-backup", "init"
-    system bin/"restic-macos-backup", "backup", "--exclude-macos-backup", "--use-fs-snapshot", "testfile"
-    system bin/"restic-macos-backup", "restore", "latest", "-t", testpath/"restore"
+    system bin/"restic-macos", "init"
+    system bin/"restic-macos", "backup", "--exclude-macos-backup", "--use-fs-snapshot", "testfile"
+    system bin/"restic-macos", "restore", "latest", "-t", testpath/"restore"
 
     assert_path_exists testpath/"restore/testfile"
   end
