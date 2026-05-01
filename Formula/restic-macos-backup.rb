@@ -1,9 +1,9 @@
 class ResticMacosBackup < Formula
-  desc "Restic build with macOS backup exclusion support"
+  desc "Restic build with macOS backup integration support"
   homepage "https://restic.net/"
-  url "https://github.com/elohmeier/restic/archive/refs/tags/v0.18.1-macos-backup-excludes.1.tar.gz"
-  version "0.18.1-macos-backup-excludes.1"
-  sha256 "2bf264a6135d1213d0e731048c77bb5ad3f33a8ec6d4fb03d2ef74904b12a38d"
+  url "https://github.com/elohmeier/restic/archive/refs/tags/v0.18.1-macos.1.tar.gz"
+  version "0.18.1-macos.1"
+  sha256 "0b5c75bb743d90739cbe74e2e66dc848e17109081dce4c0b422a97e19bca67e5"
   license "BSD-2-Clause"
 
   depends_on "go" => :build
@@ -21,7 +21,7 @@ class ResticMacosBackup < Formula
     (testpath/"testfile").write("This is a testfile")
 
     system bin/"restic-macos-backup", "init"
-    system bin/"restic-macos-backup", "backup", "--exclude-macos-backup", "testfile"
+    system bin/"restic-macos-backup", "backup", "--exclude-macos-backup", "--use-fs-snapshot", "testfile"
     system bin/"restic-macos-backup", "restore", "latest", "-t", testpath/"restore"
 
     assert_path_exists testpath/"restore/testfile"
