@@ -10,10 +10,20 @@
   "customManagers": [
     {
       "customType": "regex",
-      "description": "Homebrew formulae: GitHub releases (v-prefixed tags)",
+      "description": "Homebrew formulae: GitHub release tag in URL path (v-prefixed)",
       "fileMatch": ["^Formula/.+\\.rb$"],
       "matchStrings": [
-        "url \"https://github\\.com/(?<depName>[^/]+/[^/]+)/releases/download/v(?<currentValue>[^/]+)/"
+        "url \"https://github\\.com/(?<depName>[^/]+/[^/]+)/releases/download/v(?<currentValue>[^/]+)/[^\"]+\""
+      ],
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+)$"
+    },
+    {
+      "customType": "regex",
+      "description": "Homebrew formulae: version embedded in release artifact filename",
+      "fileMatch": ["^Formula/.+\\.rb$"],
+      "matchStrings": [
+        "url \"https://github\\.com/(?<depName>[^/]+/[^/]+)/releases/download/v[^/]+/[^\"]*?[-_]v?(?<currentValue>\\d+\\.\\d+(?:\\.\\d+)?)(?:[-_.][^\"]*)?\\.(?:zip|tar\\.gz|tar\\.xz|tar\\.bz2|tgz|jar)\""
       ],
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+)$"
