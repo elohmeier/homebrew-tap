@@ -39,8 +39,10 @@ class Sqitch < Formula
               /my \$SYSTEM_DIR = q\{[^}]*\}/,
               "my $SYSTEM_DIR = q{#{etc}/sqitch}"
 
+    perl = formula_opt_bin("perl")/"perl"
+
     # Record perl version used during build for staleness detection.
-    perl_version = Utils.safe_popen_read("perl", "-e", "print $^V").strip
+    perl_version = Utils.safe_popen_read(perl.to_s, "-e", "print $^V").strip
     (libexec/".perl_version").write(perl_version)
 
     # Create wrapper that sets PERL5LIB and detects perl version mismatch.
@@ -48,16 +50,17 @@ class Sqitch < Formula
       #!/bin/bash
       set -euo pipefail
       SQITCH_LIBEXEC="#{libexec}"
+      PERL="#{perl}"
       BUILT_PERL_VERSION="$(cat "$SQITCH_LIBEXEC/.perl_version")"
-      CURRENT_PERL_VERSION="$(perl -e 'print $^V')"
+      CURRENT_PERL_VERSION="$("$PERL" -e 'print $^V')"
       if [ "$BUILT_PERL_VERSION" != "$CURRENT_PERL_VERSION" ]; then
         echo "sqitch was built with perl $BUILT_PERL_VERSION but current perl is $CURRENT_PERL_VERSION" >&2
         echo "Run: brew reinstall elohmeier/tap/sqitch" >&2
         exit 1
       fi
       export PERL5LIB="$SQITCH_LIBEXEC/lib/perl5${PERL5LIB:+:$PERL5LIB}"
-      export PATH="#{Formula["libpq"].opt_bin}:#{Formula["sqlite"].opt_bin}:$PATH"
-      exec perl -CAS "$SQITCH_LIBEXEC/bin/sqitch" "$@"
+      export PATH="#{formula_opt_bin("libpq")}:#{formula_opt_bin("sqlite")}:$PATH"
+      exec "$PERL" -CAS "$SQITCH_LIBEXEC/bin/sqitch" "$@"
     BASH
   end
 
@@ -74,6 +77,6 @@ class Sqitch < Formula
   end
 
   test do
-    system bin/"sqitch", "--version"
+    assert_match "Usage", shell_output("#{bin}/sqitch --help")
   end
 end
