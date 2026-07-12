@@ -54,7 +54,7 @@ jobs:
           echo "testing_formulae=$CHANGED" >> "$GITHUB_OUTPUT"
 
       - name: Cache Homebrew Bundler RubyGems
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: ${{ steps.set-up-homebrew.outputs.gems-path }}
           key: ${{ matrix.os }}-rubygems-${{ steps.set-up-homebrew.outputs.gems-hash }}
