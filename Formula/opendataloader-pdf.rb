@@ -1,7 +1,7 @@
 class OpendataloaderPdf < Formula
   desc "PDF parser for AI-ready data extraction (Markdown, JSON, HTML)"
   homepage "https://github.com/opendataloader-project/opendataloader-pdf"
-  url "https://github.com/opendataloader-project/opendataloader-pdf/releases/download/v2.4.7/opendataloader-pdf-cli-2.4.7.zip"
+  url "https://github.com/opendataloader-project/opendataloader-pdf/releases/download/v2.5.0/opendataloader-pdf-cli-2.5.0.zip"
   sha256 "dafcadc514cb5fb77f6f108a1a3be9a11937f0304749c5707bdd0881abea20bc"
   license "Apache-2.0"
 
