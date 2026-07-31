@@ -46,7 +46,7 @@ class W3mImage < Formula
     # Configure without --disable-image to enable image support (requires imlib2)
     system "./configure", "--prefix=#{prefix}",
                           # "--disable-image", # <<< REMOVED THIS LINE
-                          "--with-ssl=#{Formula["openssl@3"].opt_prefix}"
+                          "--with-ssl=#{formula_opt_prefix("openssl@3")}"
     system "make", "install"
   end
 

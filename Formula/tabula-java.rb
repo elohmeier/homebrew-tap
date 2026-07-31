@@ -40,7 +40,7 @@ class TabulaJava < Formula
     (bin/"tabula-java").write <<~EOS
       #!/bin/bash
       # Find the installed Java provided by the openjdk formula dependency
-      JAVA_HOME="#{Formula["openjdk"].opt_prefix}"
+      JAVA_HOME="#{formula_opt_prefix("openjdk")}"
       # Execute the renamed JAR file located in libexec, passing all arguments ($@)
       exec "${JAVA_HOME}/bin/java" -jar "#{libexec}/tabula.jar" "$@"
     EOS
