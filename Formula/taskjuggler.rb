@@ -1,16 +1,16 @@
 class Taskjuggler < Formula
   desc "Project management tool with an optimizing scheduler"
   homepage "https://taskjuggler.org/"
-  url "https://github.com/elohmeier/TaskJuggler/archive/16f2bc46366ce93a94020c82c77bd96e9a56f8a4.tar.gz"
+  url "https://github.com/elohmeier/TaskJuggler/archive/32aea8cb9634a6b7559fcc22b04b52db8f64c8f8.tar.gz"
   version "3.8.4"
-  sha256 "41a8402da5e94a46f2aa203d6284b32da8b43ff2ac721909cda0f1afb8eefd1c"
+  sha256 "0c48c54500749b40ab742c013397dee985feca5d302eb3491a3408aca3fbb438"
   license "GPL-2.0-only"
-  revision 1
+  revision 2
 
   bottle do
-    root_url "https://github.com/elohmeier/homebrew-tap/releases/download/taskjuggler-3.8.4_1"
-    sha256 cellar: :any_skip_relocation, arm64_sequoia: "693508485dfebee1d6065a513225ff13d5ea6f574bfeb471f732ffc0c5200f49"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:  "ce6ec960862cc3d85efd898cee9abdb80768bc7e99f5ace29e1c8d4bcf87f5e6"
+    root_url "https://github.com/elohmeier/homebrew-tap/releases/download/taskjuggler-3.8.4_2"
+    sha256 cellar: :any_skip_relocation, arm64_sequoia: "29e970603a7bca572556c978cf4058fb7046cd491daab6328da1f341866943ed"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:  "15ca60d121d2338fdd937f3e1a8c49087d16757afad803515422b07e59dd35f0"
   end
 
   depends_on "ruby"
@@ -121,7 +121,10 @@ class Taskjuggler < Formula
       }
     TJP
 
-    system bin/"tj3", "--silent", testpath/"project.tjp"
-    assert_match "Homebrew test", (testpath/"report.html").read
+    output_dir = testpath/"reports"
+    output_dir.mkpath
+    system bin/"tj3", "--silent", "--output-dir", output_dir,
+                      "--report", "report", testpath/"project.tjp"
+    assert_match "Homebrew test", (output_dir/"report.html").read
   end
 end
