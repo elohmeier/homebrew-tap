@@ -1,9 +1,11 @@
 class Taskjuggler < Formula
   desc "Project management tool with an optimizing scheduler"
   homepage "https://taskjuggler.org/"
-  url "https://rubygems.org/downloads/taskjuggler-3.8.4.gem"
-  sha256 "961e4905a93308ee813d5effa3a21a40bb47ba61ff2eec26af3ab7ae434a0857"
+  url "https://github.com/elohmeier/TaskJuggler/archive/16f2bc46366ce93a94020c82c77bd96e9a56f8a4.tar.gz"
+  version "3.8.4"
+  sha256 "41a8402da5e94a46f2aa203d6284b32da8b43ff2ac721909cda0f1afb8eefd1c"
   license "GPL-2.0-only"
+  revision 1
 
   depends_on "ruby"
 
@@ -63,7 +65,7 @@ class Taskjuggler < Formula
     sha256 "06574eca475253d6c18145dd70af80d0eb970182d55053497c5f4d797ea160e8"
   end
 
-  # TaskJuggler requires these bundled gems but does not declare them.
+  # Ruby 4 extracts these libraries from the standard library.
   resource "base64" do
     url "https://rubygems.org/downloads/base64-0.3.0.gem"
     sha256 "27337aeabad6ffae05c265c450490628ef3ebd4b67be58257393227588f5a97b"
@@ -82,7 +84,8 @@ class Taskjuggler < Formula
       system "gem", "install", resource.cached_download,
              "--ignore-dependencies", "--no-document", "--install-dir", libexec
     end
-    system "gem", "install", cached_download,
+    system "gem", "build", "taskjuggler.gemspec"
+    system "gem", "install", "taskjuggler-#{version}.gem",
            "--ignore-dependencies", "--no-document", "--install-dir", libexec
 
     bin.install libexec.glob("bin/tj3*")
@@ -91,7 +94,8 @@ class Taskjuggler < Formula
                              GEM_PATH: ENV.fetch("GEM_HOME")
 
     gem_root = libexec/"gems/taskjuggler-#{version}"
-    man1.install (gem_root/"man").glob("*.1")
+    manpages = (gem_root/"man").glob("*.1")
+    man1.install manpages unless manpages.empty?
   end
 
   test do
