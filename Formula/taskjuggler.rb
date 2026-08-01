@@ -7,6 +7,12 @@ class Taskjuggler < Formula
   license "GPL-2.0-only"
   revision 1
 
+  bottle do
+    root_url "https://github.com/elohmeier/homebrew-tap/releases/download/taskjuggler-3.8.4_1"
+    sha256 cellar: :any_skip_relocation, arm64_sequoia: "693508485dfebee1d6065a513225ff13d5ea6f574bfeb471f732ffc0c5200f49"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:  "ce6ec960862cc3d85efd898cee9abdb80768bc7e99f5ace29e1c8d4bcf87f5e6"
+  end
+
   depends_on "ruby"
 
   # Runtime dependencies not provided as default gems by Homebrew's Ruby.
