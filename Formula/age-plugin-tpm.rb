@@ -12,7 +12,7 @@ class AgePluginTpm < Formula
   depends_on :linux
 
   def install
-    ldflags = "-s -w -X main.version=#{version}"
+    ldflags = "-X main.version=#{version}"
     system "go", "build", *std_go_args(ldflags:), "./cmd/age-plugin-tpm"
   end
 
