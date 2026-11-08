@@ -10,6 +10,7 @@ class AgePluginTpm < Formula
 
   depends_on "go" => :build
   depends_on :linux
+  depends_on "openssl@3"
 
   def install
     ldflags = "-X main.version=#{version}"
