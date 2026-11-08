@@ -19,13 +19,6 @@ class AgePluginSe < Formula
     system "make", "PREFIX=#{prefix}", "RELEASE=1", "install"
   end
 
-  service do
-    run [opt_bin/"age-plugin-se", "agent", "--lock-on-sleep"]
-    keep_alive true
-    log_path var/"log/age-plugin-se-agent.log"
-    error_log_path var/"log/age-plugin-se-agent.log"
-  end
-
   test do
     (testpath/"secret.txt").write "My secret"
     system "age", "--encrypt",
