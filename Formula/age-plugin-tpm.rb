@@ -2,9 +2,9 @@ class AgePluginTpm < Formula
   desc "Age plugin for TPM 2.0 sealed identities, with PIN unlock agent"
   homepage "https://github.com/elohmeier/age-plugin-tpm"
   url "https://github.com/elohmeier/age-plugin-tpm.git",
-      tag:      "v1.0.1-agent.1",
-      revision: "6485358467d5a6b5bc5f687afe331aa746316ea7"
-  version "1.0.1-agent.1"
+      tag:      "v1.0.1-agent.2",
+      revision: "53b6435440b9f5acce8d3fb0488efe98dbc07c71"
+  version "1.0.1-agent.2"
   license "MIT"
   head "https://github.com/elohmeier/age-plugin-tpm.git", branch: "agent"
 

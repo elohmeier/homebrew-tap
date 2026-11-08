@@ -2,9 +2,9 @@ class AgePluginSe < Formula
   desc "Age plugin for Apple Secure Enclave, with application-password unlock agent"
   homepage "https://github.com/elohmeier/age-plugin-se"
   url "https://github.com/elohmeier/age-plugin-se.git",
-      tag:      "v0.2.1-agent.4",
-      revision: "6388e28613bb08a5df84724c1cc38716e431cdd0"
-  version "0.2.1-agent.4"
+      tag:      "v0.2.1-agent.5",
+      revision: "f5f50aac84e85abd626e3dae01e41198be41b91e"
+  version "0.2.1-agent.5"
   license "MIT"
   head "https://github.com/elohmeier/age-plugin-se.git", branch: "agent"
 
