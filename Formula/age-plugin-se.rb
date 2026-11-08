@@ -1,10 +1,9 @@
 class AgePluginSe < Formula
   desc "Age plugin for Apple Secure Enclave, with application-password unlock agent"
   homepage "https://github.com/elohmeier/age-plugin-se"
-  # TODO: push the `agent` branch of the fork, tag it, and fill in the tag's commit.
   url "https://github.com/elohmeier/age-plugin-se.git",
       tag:      "v0.2.1-agent.1",
-      revision: "0000000000000000000000000000000000000000"
+      revision: "734f6a6d525324f549f34ccbe829f9da6056d912"
   license "MIT"
   head "https://github.com/elohmeier/age-plugin-se.git", branch: "agent"
 
