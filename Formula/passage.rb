@@ -2,6 +2,7 @@ class Passage < Formula
   desc "Password manager using age encryption, a fork of pass"
   homepage "https://github.com/FiloSottile/passage"
   url "https://github.com/FiloSottile/passage/archive/refs/tags/1.7.4a2.tar.gz"
+  version "1.7.4a2"
   sha256 "d4bd97be2eda4249b31c2042707ef70ba50385f6fb7791598f51be794168ee2c"
   license "GPL-2.0-or-later"
   head "https://github.com/FiloSottile/passage.git", branch: "main"
