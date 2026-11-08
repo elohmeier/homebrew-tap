@@ -4,6 +4,7 @@ class AgePluginTpm < Formula
   url "https://github.com/elohmeier/age-plugin-tpm.git",
       tag:      "v1.0.1-agent.1",
       revision: "6485358467d5a6b5bc5f687afe331aa746316ea7"
+  version "1.0.1-agent.1"
   license "MIT"
   head "https://github.com/elohmeier/age-plugin-tpm.git", branch: "agent"
 
