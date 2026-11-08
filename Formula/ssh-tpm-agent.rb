@@ -15,6 +15,8 @@ class SshTpmAgent < Formula
   depends_on :linux
 
   def install
+    # cgo only adds go-tpm-tools' OpenSSL-linked simulator, which is for testing
+    ENV["CGO_ENABLED"] = "0"
     %w[ssh-tpm-agent ssh-tpm-keygen ssh-tpm-add ssh-tpm-hostkeys].each do |cmd|
       system "go", "build", *std_go_args(ldflags: "-s -w -X main.Version=#{version}", output: bin/cmd), "./cmd/#{cmd}"
     end
